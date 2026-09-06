@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kiran Interior — 3D Room Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,650&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="3d-designer.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <span class="mark">Kiran Interior</span>
+      <span class="tag">3D room designer</span>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
+    <nav id="mainNav">
+      <button data-page="designer" class="active">Designer</button>
+      <button data-page="admin">Admin</button>
+    </nav>
+  </div>
+</header>
+
+<!-- ===================== DESIGNER PAGE ===================== -->
+<section id="page-designer" class="page active">
+  <div class="designer-layout">
+
+    <aside class="sidebar">
+      <div class="room-setup">
+        <h2>Room size (feet)</h2>
+        <div class="dims3">
+          <div>
+            <label>Width</label>
+            <input type="number" id="roomWidth" min="6" step="0.5" value="20">
+          </div>
+          <div>
+            <label>Breadth</label>
+            <input type="number" id="roomBreadth" min="6" step="0.5" value="15">
+          </div>
+          <div>
+            <label>Height</label>
+            <input type="number" id="roomHeight" min="7" step="0.5" value="9">
+          </div>
+        </div>
+        <button class="primary" id="buildRoomBtn" style="width:100%">Build room</button>
+        <p class="note" id="roomNote">Building a new room clears items already placed.</p>
+      </div>
+
+      <div class="catalog" id="catalogList"><!-- category accordions injected here --></div>
+    </aside>
+
+    <div class="stage-wrap">
+      <div id="stage"></div>
+
+      <div class="stage-toolbar">
+        <button class="ghost" id="resetCamBtn">Reset view</button>
+        <button class="ghost danger" id="clearItemsBtn">Clear items</button>
+        <span class="item-count" id="itemCount">0 items placed</span>
+      </div>
+
+      <div class="stage-toolbar export-toolbar">
+        <button class="primary" id="downloadPdfBtn" style="margin-top:0">Download PDF</button>
+        <button class="whatsapp" id="whatsappBtn">
+          <svg viewBox="0 0 32 32" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M16.04 3C9.4 3 4 8.4 4 15.04c0 2.24.62 4.36 1.7 6.18L4 29l7.94-1.66a12.03 12.03 0 0 0 4.1.72h.01c6.64 0 12.04-5.4 12.04-12.04C28.09 8.4 22.68 3 16.04 3zm0 21.9h-.01a10 10 0 0 1-3.98-.84l-.29-.13-4.66.97 1-4.51-.19-.3a9.86 9.86 0 0 1-1.5-5.28c0-5.5 4.48-9.98 10.03-9.98 2.68 0 5.2 1.04 7.1 2.94a9.9 9.9 0 0 1 2.94 7.07c0 5.5-4.53 10.06-10.44 10.06zm5.5-7.53c-.3-.15-1.78-.88-2.06-.98-.28-.1-.48-.15-.68.15-.2.3-.78.98-.96 1.18-.18.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.5-.9-.8-1.5-1.79-1.68-2.09-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.68-1.65-.94-2.26-.25-.6-.5-.51-.68-.52h-.58c-.2 0-.53.07-.8.38-.28.3-1.05 1.03-1.05 2.5s1.08 2.9 1.23 3.1c.15.2 2.12 3.24 5.14 4.54.72.31 1.28.5 1.72.64.72.23 1.38.2 1.9.12.58-.09 1.78-.73 2.03-1.43.25-.7.25-1.3.18-1.43-.07-.13-.27-.2-.57-.35z"/></svg>
+          Share on WhatsApp
+        </button>
+      </div>
+
+      <div class="selected-panel" id="selectedPanel" style="display:none">
+        <div class="sp-title" id="spName">—</div>
+        <div class="sp-dims" id="spDims">—</div>
+        <div class="sp-actions">
+          <button class="ghost" id="rotateBtn">⟳ Rotate 90°</button>
+          <button class="ghost danger" id="deleteBtn">Delete</button>
+        </div>
+        <p class="hint">Drag the item on the floor to reposition it.</p>
+      </div>
+
+      <p class="drag-hint">Click an item on the left to add it. Drag inside the room to move furniture; drag outside with the mouse to orbit the camera.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ADMIN PAGE ===================== -->
+<section id="page-admin" class="page">
+  <main class="admin-main">
+    <div id="adminGate" class="gate">
+      <div class="eyebrow" style="text-align:center">Staff only</div>
+      <h2>Admin sign-in</h2>
+      <label for="adminPass">Password</label>
+      <input type="password" id="adminPass" placeholder="Enter admin password">
+      <button class="primary" id="adminLoginBtn" style="width:100%">Sign in</button>
+      <p class="hint">Default password: kiran123 — change it in 3d-designer.js before going live.</p>
+    </div>
+
+    <div id="adminPanel" style="display:none">
+      <div class="eyebrow">Catalog manager</div>
+      <h1>Manage rooms &amp; furniture items</h1>
+      <p class="lede">Add new items to Hall, Kitchen, Toilet, Bedroom, Puja Room or Others, and set their width, height and depth in feet. Changes appear immediately in the Designer for every visitor.</p>
+
+      <div class="panel">
+        <h2>Add a new item</h2>
+        <div class="admin-form">
+          <div>
+            <label for="newCategory">Category</label>
+            <select id="newCategory">
+              <option>Hall</option>
+              <option>Kitchen</option>
+              <option>Toilet</option>
+              <option>Bedroom</option>
+              <option>Puja Room</option>
+              <option>Others</option>
+            </select>
+          </div>
+          <div>
+            <label for="newName">Item name</label>
+            <input type="text" id="newName" placeholder="e.g. Recliner Sofa">
+          </div>
+          <div>
+            <label for="newShape">Shape style</label>
+            <select id="newShape">
+              <option value="box">Simple block</option>
+              <option value="sofa">Sofa</option>
+              <option value="bed">Bed</option>
+              <option value="wardrobe">Wardrobe / Cabinet</option>
+              <option value="table">Table (legs + top)</option>
+              <option value="chair">Chair</option>
+              <option value="counter">Counter / Island</option>
+            </select>
+          </div>
+          <div>
+            <label for="newColor">Color</label>
+            <input type="color" id="newColor" value="#8a6142">
+          </div>
+          <div>
+            <label for="newW">Width (ft)</label>
+            <input type="number" id="newW" min="0.2" step="0.1" placeholder="4">
+          </div>
+          <div>
+            <label for="newD">Depth (ft)</label>
+            <input type="number" id="newD" min="0.2" step="0.1" placeholder="2">
+          </div>
+          <div>
+            <label for="newH">Height (ft)</label>
+            <input type="number" id="newH" min="0.2" step="0.1" placeholder="3">
+          </div>
+        </div>
+        <button class="primary" id="addCatalogBtn">Add item</button>
+      </div>
+
+      <div class="panel" style="margin-top:26px">
+        <h2>Existing items</h2>
+        <div id="adminList"></div>
+      </div>
+    </div>
+  </main>
+</section>
+
+<div id="toast" class="toast"></div>
+
+<script src="3d-designer.js"></script>
+</body>
+</html>
