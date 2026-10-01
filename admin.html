@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — RoomCraft 3D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body style="background:var(--paper);">
+
+<header class="topbar">
+  <div class="brand"><span class="mark">RoomCraft<span>3D</span></span> <span style="color:#B9B2A0;font-size:.8rem;margin-left:8px;">Admin</span></div>
+  <div class="actions"><a href="index.html">← Back to designer</a></div>
+</header>
+
+<div class="admin-shell">
+  <h1>Manage furniture catalog</h1>
+  <p class="lede">Add new items to any room, or edit the name, size, and colour of existing ones. Changes appear immediately on the designer page.</p>
+
+  <div class="admin-card">
+    <h3 style="margin-bottom:14px;">Add a new item</h3>
+    <div class="form-grid">
+      <div class="field">
+        <label>Room</label>
+        <select id="np-category"></select>
+      </div>
+      <div class="field">
+        <label>Shape</label>
+        <select id="np-model"></select>
+      </div>
+      <div class="field"><label>Name</label><input type="text" id="np-name" placeholder="e.g. King Bed"></div>
+      <div class="field"><label>Width (ft)</label><input type="number" id="np-width" step="0.1" value="3"></div>
+      <div class="field"><label>Height (ft)</label><input type="number" id="np-height" step="0.1" value="3"></div>
+      <div class="field"><label>Depth (ft)</label><input type="number" id="np-depth" step="0.1" value="3"></div>
+      <div class="field"><label>Height off floor (ft)</label><input type="number" id="np-elevation" step="0.1" value="0" min="0"></div>
+      <div class="field"><label>Colour</label><input type="color" id="np-color" value="#8B5E34" style="height:36px;padding:2px;"></div>
+      <div class="field"><button class="btn brass block" id="add-item-btn">Add item</button></div>
+    </div>
+  </div>
+
+  <div class="admin-card">
+    <h3 style="margin-bottom:14px;">Existing items</h3>
+    <div class="cat-tabs" id="admin-cat-tabs" style="padding:0 0 14px;border:none;"></div>
+    <table class="admin-table">
+      <thead>
+        <tr><th>Colour</th><th>Name</th><th>Shape</th><th>Width</th><th>Height</th><th>Depth</th><th>Off floor</th><th></th></tr>
+      </thead>
+      <tbody id="admin-items-tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="admin-card">
+    <h3 style="margin-bottom:10px;">Backup / restore catalog</h3>
+    <p style="color:var(--muted);font-size:.85rem;margin-bottom:12px;">Everything above is stored in this browser. Export a backup file, or restore the original starter catalog if needed.</p>
+    <button class="btn outline" id="export-catalog-btn">Export catalog (.json)</button>
+    <button class="btn outline" id="reset-catalog-btn">Restore default catalog</button>
+  </div>
+</div>
+
+<script src="js/catalog.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>
